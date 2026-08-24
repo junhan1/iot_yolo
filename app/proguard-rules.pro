@@ -1,0 +1,1 @@
+# Keep rules intentionally empty; the native runtime is prebuilt by Rockchip.

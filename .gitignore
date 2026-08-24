@@ -1,0 +1,16 @@
+# Android / Gradle 构建产物
+.gradle/
+**/build/
+**/.cxx/
+.externalNativeBuild/
+
+# 本机 Android SDK 路径
+local.properties
+
+# IDE 本地状态
+.idea/
+*.iml
+
+# 安装包与设备抓取产物
+*.apk
+captures/
