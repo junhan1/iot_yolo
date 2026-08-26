@@ -10,6 +10,13 @@
         android:layout_weight="1"
         android:background="#000000">
 
+        <ImageView
+            android:id="@+id/still_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:visibility="gone" />
+
         <TextureView
             android:id="@+id/preview"
             android:layout_width="match_parent"
@@ -50,11 +57,31 @@
                 android:textColor="#8B9AA8"
                 android:textSize="14sp" />
 
+<!--            <Button-->
+<!--                android:id="@+id/select_image"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="18dp"-->
+<!--                android:text="选择图片并推理" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/select_image_yuv"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="选择图片对比 RGB/YUV 推理" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/save_realtime_frame"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:text="保存实时帧到相册" />-->
+
             <TextView
                 android:id="@+id/stats"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
                 android:background="#182027"
                 android:fontFamily="monospace"
                 android:lineSpacingExtra="8dp"
@@ -62,6 +89,21 @@
                 android:text="状态：等待摄像头\n\nFPS：--\n推理耗时：--\n检测数量：--\n输入尺寸：640 × 640\n颜色格式：YUV_420_888"
                 android:textColor="#DDE7EE"
                 android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/detection_results"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:background="#182027"
+                android:fontFamily="monospace"
+                android:minHeight="72dp"
+                android:padding="18dp"
+                android:text="{\n  &quot;count&quot;: 0,\n  &quot;detections&quot;: []\n}"
+                android:textColor="#DDE7EE"
+                android:textIsSelectable="true"
+                android:textSize="14sp"
+                android:gravity="top|start" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -75,7 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="0  no-vest\n1  vest"
+                android:text="0  head\n1  helmet"
                 android:textColor="#DDE7EE"
                 android:textSize="16sp" />
         </LinearLayout>
