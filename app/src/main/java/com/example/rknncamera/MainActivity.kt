@@ -28,6 +28,7 @@ import android.view.TextureView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import android.graphics.Color
 import java.util.Locale
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.Executors
@@ -41,6 +42,7 @@ class MainActivity : Activity() {
     private lateinit var stillImage: ImageView
     private lateinit var stats: TextView
     private lateinit var detectionResults: TextView
+    private lateinit var inferenceStatusIndicator: TextView
     private lateinit var manager: CameraManager
     private val imageThread = HandlerThread("ImageReaderThread").apply { start() }
     private val imageHandler = Handler(imageThread.looper)
@@ -52,6 +54,7 @@ class MainActivity : Activity() {
     }
     private val detectorLock = Any()
     private val inferenceQueue = ArrayBlockingQueue<YuvFrame>(1)
+    private val recentInferenceClasses = ArrayDeque<Int>(3)
     private val overlayUpdatePosted = AtomicBoolean(false)
     private val latestDetectionVersion = AtomicLong(0L)
     private val isDestroyed = AtomicBoolean(false)
@@ -84,6 +87,7 @@ class MainActivity : Activity() {
         stillImage = findViewById(R.id.still_image)
         stats = findViewById(R.id.stats)
         detectionResults = findViewById(R.id.detection_results)
+        inferenceStatusIndicator = findViewById(R.id.inference_status_indicator)
 //        findViewById<android.view.View>(R.id.select_image).setOnClickListener { openImagePicker(compareYuv = false) }
 //        findViewById<android.view.View>(R.id.select_image_yuv).setOnClickListener { openImagePicker(compareYuv = true) }
 //        findViewById<android.view.View>(R.id.save_realtime_frame).setOnClickListener { requestSaveRealtimeFrame() }
@@ -217,24 +221,24 @@ class MainActivity : Activity() {
                 detector?.detectRgbAndYuv(bitmap) ?: RgbYuvDetections(emptyList(), emptyList())
             }
             val elapsedMs = (SystemClock.elapsedRealtimeNanos() - startedNs) / 1_000_000.0
-            val json = formatComparisonJson(result)
+           // val json = formatComparisonJson(result)
             runOnUiThread {
                 if (!isDestroyed.get()) {
                     stillImage.setImageBitmap(bitmap)
                     overlay.setImageSourceSize(bitmap.width, bitmap.height)
                     overlay.setComparisonDetections(result.rgb, result.yuv)
-                    detectionResults.text = json
+                   // detectionResults.text = json
                     stats.text = "状态：RGB/YUV 对比推理完成\n总耗时：${"%.1f".format(Locale.US, elapsedMs)} ms\nRGB 检测数量：${result.rgb.size}\nYUV 检测数量：${result.yuv.size}\n输入尺寸：${bitmap.width} × ${bitmap.height}"
                 }
             }
         }
     }
 
-    private fun formatComparisonJson(result: RgbYuvDetections): String =
-        """{
-            "rgb": ${formatDetectionJson(result.rgb)},
-            "yuv": ${formatDetectionJson(result.yuv)}
-        }""".trimIndent()
+//    private fun formatComparisonJson(result: RgbYuvDetections): String =
+//        """{
+//            "rgb": ${formatDetectionJson(result.rgb)},
+//            "yuv": ${formatDetectionJson(result.yuv)}
+//        }""".trimIndent()
 
     private fun inferSelectedImage(uri: Uri) {
         imageMode = true
@@ -258,16 +262,16 @@ class MainActivity : Activity() {
                 detector?.detect(bitmap).orEmpty()
             }
             val elapsedMs = (SystemClock.elapsedRealtimeNanos() - startedNs) / 1_000_000.0
-            val json = formatDetectionJson(result)
+           // val json = formatDetectionJson(result)
             latestDetections = result.toList()
             lastDetectionCount = result.size
-            latestDetectionText = json
+           // latestDetectionText = json
             runOnUiThread {
                 if (!isDestroyed.get()) {
                     stillImage.setImageBitmap(bitmap)
                     overlay.setImageSourceSize(bitmap.width, bitmap.height)
                     overlay.setImageMode()
-                    detectionResults.text = json
+                   // detectionResults.text = json
                     overlay.setDetections(result)
                     stats.text = "状态：图片推理完成\n推理耗时：${"%.1f".format(Locale.US, elapsedMs)} ms\n检测数量：${result.size}\n输入尺寸：${bitmap.width} × ${bitmap.height}"
                 }
@@ -418,7 +422,8 @@ class MainActivity : Activity() {
                 }
                 latestDetections = result.toList()
                 lastDetectionCount = result.size
-                latestDetectionText = formatDetectionJson(result)
+               // latestDetectionText = formatDetectionJson(result)
+                updateInferenceStatus(result)
                 latestDetectionVersion.incrementAndGet()
                 publishLatestDetections()
                 inferenceFramesSinceStats++
@@ -436,6 +441,39 @@ class MainActivity : Activity() {
         }
     }
 
+    private fun updateInferenceStatus(detections: List<Detection>) {
+        val statusClass = when {
+            detections.any { it.classId == HELMET_CLASS_ID } -> HELMET_CLASS_ID
+            detections.isNotEmpty() && detections.all { it.classId == HEAD_CLASS_ID } -> HEAD_CLASS_ID
+            else -> UNKNOWN_CLASS_ID
+        }
+        if (recentInferenceClasses.size == STATUS_WINDOW_SIZE) {
+            recentInferenceClasses.removeFirst()
+        }
+        recentInferenceClasses.addLast(statusClass)
+    }
+
+    private fun renderInferenceStatus() {
+        val recentClasses = recentInferenceClasses.toList()
+        val hasHelmet = recentClasses.any { it == HELMET_CLASS_ID }
+        val allHeads = recentClasses.size == STATUS_WINDOW_SIZE &&
+            recentClasses.all { it == HEAD_CLASS_ID }
+        when {
+            hasHelmet -> {
+                inferenceStatusIndicator.setBackgroundColor(Color.rgb(198, 40, 40))
+                inferenceStatusIndicator.text = "最近三次推理状态：检测到 helmet"
+            }
+            allHeads -> {
+                inferenceStatusIndicator.setBackgroundColor(Color.rgb(46, 125, 50))
+                inferenceStatusIndicator.text = "最近三次推理状态：全部为 head"
+            }
+            else -> {
+                inferenceStatusIndicator.setBackgroundColor(Color.rgb(89, 99, 107))
+                inferenceStatusIndicator.text = "最近三次推理状态：等待 head 连续三次"
+            }
+        }
+    }
+
     private fun publishLatestDetections() {
         if (!overlayUpdatePosted.compareAndSet(false, true)) return
 
@@ -446,6 +484,7 @@ class MainActivity : Activity() {
                 Log.i(LOG_TAG, "ui publish delayMs=$publishDelayMs detections=${latestDetections.size}")
                 detectionResults.text = latestDetectionText
                 overlay.setDetections(latestDetections)
+                renderInferenceStatus()
             }
             overlayUpdatePosted.set(false)
             if (!isDestroyed.get() && latestDetectionVersion.get() != renderedVersion) {
@@ -454,34 +493,34 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun formatDetectionJson(items: List<Detection>): String {
-        val detections = items.mapIndexed { index, item ->
-            val className = when (item.classId) {
-                0 -> "head"
-                1 -> "helmet"
-                else -> "class-${item.classId}"
-            }
-            val confidence = item.score.coerceIn(0f, 1f)
-
-            """{
-                "index": ${index + 1},
-                "class_id": ${item.classId},
-                "class_name": "$className",
-                "confidence": ${"%.6f".format(Locale.US, confidence)},
-                "bbox": {
-                    "left": ${"%.6f".format(Locale.US, item.left)},
-                    "top": ${"%.6f".format(Locale.US, item.top)},
-                    "right": ${"%.6f".format(Locale.US, item.right)},
-                    "bottom": ${"%.6f".format(Locale.US, item.bottom)}
-                }
-            }""".trimIndent()
-        }
-
-        return """{
-            "count": ${items.size},
-            "detections": [${detections.joinToString(",")}]
-        }""".trimIndent()
-    }
+//    private fun formatDetectionJson(items: List<Detection>): String {
+//        val detections = items.mapIndexed { index, item ->
+//            val className = when (item.classId) {
+//                0 -> "head"
+//                1 -> "helmet"
+//                else -> "class-${item.classId}"
+//            }
+//            val confidence = item.score.coerceIn(0f, 1f)
+//
+//            """{
+//                "index": ${index + 1},
+//                "class_id": ${item.classId},
+//                "class_name": "$className",
+//                "confidence": ${"%.6f".format(Locale.US, confidence)},
+//                "bbox": {
+//                    "left": ${"%.6f".format(Locale.US, item.left)},
+//                    "top": ${"%.6f".format(Locale.US, item.top)},
+//                    "right": ${"%.6f".format(Locale.US, item.right)},
+//                    "bottom": ${"%.6f".format(Locale.US, item.bottom)}
+//                }
+//            }""".trimIndent()
+//        }
+//
+//        return """{
+//            "count": ${items.size},
+//            "detections": [${detections.joinToString(",")}]
+//        }""".trimIndent()
+//    }
 
     private fun offerLatestFrame(frame: YuvFrame) {
         if (!inferenceQueue.offer(frame)) {
@@ -542,6 +581,10 @@ class MainActivity : Activity() {
         private const val UI_UPDATE_INTERVAL_MS = 100L
         private const val JSON_UPDATE_INTERVAL_MS = 500L
         private const val LOG_EVERY_N_FRAMES = 30
+        private const val STATUS_WINDOW_SIZE = 3
+        private const val HEAD_CLASS_ID = 0
+        private const val HELMET_CLASS_ID = 1
+        private const val UNKNOWN_CLASS_ID = -1
         private const val LOG_TAG = "RknnPipeline"
     }
 }

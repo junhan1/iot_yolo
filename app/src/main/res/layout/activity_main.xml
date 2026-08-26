@@ -120,6 +120,18 @@
                 android:text="0  head\n1  helmet"
                 android:textColor="#DDE7EE"
                 android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/inference_status_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="108dp"
+                android:layout_marginTop="12dp"
+                android:background="#59636B"
+                android:gravity="center"
+                android:text="最近三次推理状态：等待中"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
