@@ -57,26 +57,26 @@
                 android:textColor="#8B9AA8"
                 android:textSize="14sp" />
 
-<!--            <Button-->
-<!--                android:id="@+id/select_image"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="18dp"-->
-<!--                android:text="选择图片并推理" />-->
+            <Button
+                android:id="@+id/select_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="选择图片并推理" />
 
-<!--            <Button-->
-<!--                android:id="@+id/select_image_yuv"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:text="选择图片对比 RGB/YUV 推理" />-->
+            <Button
+                android:id="@+id/select_image_yuv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="选择图片对比 RGB/YUV 推理" />
 
-<!--            <Button-->
-<!--                android:id="@+id/save_realtime_frame"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:text="保存实时帧到相册" />-->
+            <Button
+                android:id="@+id/save_realtime_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="保存实时帧到相册" />
 
             <TextView
                 android:id="@+id/stats"

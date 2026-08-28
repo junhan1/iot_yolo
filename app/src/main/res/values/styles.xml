@@ -1,7 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:colorAccent">#00C853</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:navigationBarColor">#101216</item>
+        <item name="android:statusBarColor">#17191D</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+
+    <style name="HmiMetric">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">92dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">#F4F6F8</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:background">@drawable/bg_hmi_metric</item>
+    </style>
+
+    <style name="HmiDeviceRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">#F0F2F4</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">monospace</item>
     </style>
 </resources>

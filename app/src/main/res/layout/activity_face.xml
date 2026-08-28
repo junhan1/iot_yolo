@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F7FB"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="离线人脸测试"
+            android:textColor="#10243E"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="支持相册与前置摄像头预览。实时录入只采集一帧；实时识别按固定间隔处理预览帧。测试库仅保存在本应用私有存储。"
+            android:textColor="#54657A"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="SDK 序列号激活"
+            android:textColor="#10243E"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/face_serial_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="XXXX-XXXX-XXXX-XXXX"
+            android:inputType="textVisiblePassword"
+            android:maxLength="19"
+            android:padding="12dp"
+            android:textAllCaps="true" />
+
+        <Button
+            android:id="@+id/face_activate"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="10dp"
+            android:text="激活并加载 SDK" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="测试身份"
+            android:textColor="#10243E"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/face_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:drawable/edit_text"
+            android:hint="例如：张三"
+            android:inputType="textPersonName"
+            android:maxLength="32"
+            android:padding="12dp" />
+
+        <TextureView
+            android:id="@+id/face_camera_preview"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginTop="18dp" />
+
+        <Button
+            android:id="@+id/face_camera_enroll"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="10dp"
+            android:text="从摄像头录入" />
+
+        <Button
+            android:id="@+id/face_camera_identify"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="10dp"
+            android:text="开始实时识别" />
+
+        <Button
+            android:id="@+id/face_enroll"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="18dp"
+            android:text="选择照片并录入" />
+
+        <Button
+            android:id="@+id/face_identify"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="10dp"
+            android:text="选择照片并识别" />
+
+        <Button
+            android:id="@+id/face_clear"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:text="清空测试人脸库" />
+
+        <TextView
+            android:id="@+id/face_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="#E5ECF5"
+            android:minHeight="72dp"
+            android:padding="16dp"
+            android:textColor="#10243E"
+            android:textSize="14sp" />
+    </LinearLayout>
+</ScrollView>

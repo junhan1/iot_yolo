@@ -7,13 +7,26 @@ android { namespace 'com.example.rknncamera'; compileSdk 35
     }
     buildTypes { release { minifyEnabled false; proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro' } }
     externalNativeBuild { cmake { path file('src/main/cpp/CMakeLists.txt'); version '3.31.5' } }
-    // ⭐ 添加这部分：统一 JVM 目标版本
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlinOptions { jvmTarget = "17" }
+    sourceSets {
+        main {
+            assets.srcDirs = [
+                'src/main/assets',
+                '../baidu_face/face-sdk-android/face-sdk-android/FaceSDKAndroid/facelibrary/src/main/assets'
+            ]
+            jniLibs.srcDirs = ['../baidu_face/face-sdk-android/face-sdk-android/FaceSDKAndroid/facelibrary/libs']
+        }
     }
+}
+
+dependencies {
+    implementation files(
+        '../baidu_face/face-sdk-android/face-sdk-android/FaceSDKAndroid/facelibrary/libs/FaceSDK-6.0.jar',
+        '../baidu_face/face-sdk-android/face-sdk-android/FaceSDKAndroid/facelibrary/libs/bd_unifylicense.jar',
+        '../baidu_face/face-sdk-android/face-sdk-android/FaceSDKAndroid/facelibrary/libs/liantian.jar'
+    )
 }

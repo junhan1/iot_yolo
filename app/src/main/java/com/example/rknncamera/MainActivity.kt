@@ -1,6 +1,7 @@
 package com.example.rknncamera
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.os.Build
@@ -79,6 +80,7 @@ class MainActivity : Activity() {
     private var reader: ImageReader? = null
     private var detector: RknnDetector? = null
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -88,9 +90,9 @@ class MainActivity : Activity() {
         stats = findViewById(R.id.stats)
         detectionResults = findViewById(R.id.detection_results)
         inferenceStatusIndicator = findViewById(R.id.inference_status_indicator)
-//        findViewById<android.view.View>(R.id.select_image).setOnClickListener { openImagePicker(compareYuv = false) }
-//        findViewById<android.view.View>(R.id.select_image_yuv).setOnClickListener { openImagePicker(compareYuv = true) }
-//        findViewById<android.view.View>(R.id.save_realtime_frame).setOnClickListener { requestSaveRealtimeFrame() }
+        findViewById<android.view.View>(R.id.select_image).setOnClickListener { openImagePicker(compareYuv = false) }
+        findViewById<android.view.View>(R.id.select_image_yuv).setOnClickListener { openImagePicker(compareYuv = true) }
+        findViewById<android.view.View>(R.id.save_realtime_frame).setOnClickListener { requestSaveRealtimeFrame() }
         preview.scaleX = 1f
         overlay.visibility = android.view.View.VISIBLE
         detector = RknnDetector(assets, "helmet.sanitized-rk3568.rknn")
