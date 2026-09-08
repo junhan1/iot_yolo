@@ -31,33 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:text="SDK 序列号激活"
-            android:textColor="#10243E"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/face_serial_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="XXXX-XXXX-XXXX-XXXX"
-            android:inputType="textVisiblePassword"
-            android:maxLength="19"
-            android:padding="12dp"
-            android:textAllCaps="true" />
-
-        <Button
-            android:id="@+id/face_activate"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="10dp"
-            android:text="激活并加载 SDK" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
             android:text="测试身份"
             android:textColor="#10243E"
             android:textSize="14sp"
